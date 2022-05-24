@@ -1,27 +1,9 @@
 {
-  "$version": 1,
+  "$version": 2,
   "logging": false,
   "entitlements_pattern": "4C 89 44 24 18 48 89 54 24 10 48 89 4C 24 08 55 53 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 F8 48 81 EC ?? ?? ?? ?? 48 8B 5A 08 45 0F B6 F1",
   "name_space": "catnip",
-  "entitlements": [
-    "12f2fca1c9304897b581254a0913ac51", // Director's Cut
-    "66a6515a52804975b22ccf226d83667d", // Multiverse Disciples of the Vault Amara Cosmetic Pack
-    "a4cd77f237c94acfab406fcbdcf53eae", // Multiverse Disciples of the Vault FL4K Cosmetic Pack
-    "55f6f076a534462ea87f73c8a64279cc", // Multiverse Disciples of the Vault Moze Cosmetic Pack
-    "71cab939e5f042ce8f65d10fe0d6b8bd", // Multiverse Disciples of the Vault Zane Cosmetic Pack
-    "6a3c06879500496b853726573b896dff", // Designer's Cut
-    "5021e93a73374d6db1c1ce6c92234f8f", // Multiverse Final Form Zane Cosmetic Pack
-    "fbc46bb6056940d2847ee1e80037a9af", // Multiverse Final Form Amara Cosmetic Pack
-    "4c43a9a691114ccd91c1884ab18f4e27", // Multiverse Final Form FL4K Cosmetic Pack
-    "ff96eef22b0e4c498e8ed80ac0030325", // Multiverse Final Form Moze Cosmetic Pack
-    "ff8e1152ddf742b68f9ac0cecd378917", // Psycho Krieg and the Fantastic Fustercluck
-    "8c826db6e14f44aeac8816e1bd593632", // Bounty of Blood
-    "3a6a3f9b351b4b599808df3267669b83", // Guns, Love, and Tentacles The Marriage of Wainwright & Hammerlock
-    "e9fdc1a9f47b4a5e8e63841c15de2b12", // Moxxi's Heist of the Handsome Jackpot
-    "552f87ec7f474410a213c521ff9d3140", // Gearbox Cosmetic Pack
-    "c8ccbe393545484cae756a6aad7e7e99", // Toy Box Weapons Pack
-    "cd4cceaa96da49bb81aeedfb110f49c5", // Gold Weapon Skins Pack
-    "5ea1981df8cc49c68f4fe086b70f7bd8", // Neon Cosmetic Pack
-    "29da568810454587930011b042eb4ebb" // Retro Cosmetic Pack
-  ]
+  "auto_fetch_entitlements": true,
+  "blacklist": [],
+  "entitlements": []
 }

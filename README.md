@@ -2,14 +2,20 @@
 
 **Legit DLC Unlocker for Epic Game Store version of Borderlands 3**
 
+It works by hooking a function that parses json string of entitlements.
+The unlocker automatically fetches DLC IDs and adds them to the original list.
+Users can use blacklist option in config to disable automatically fetched DLCs.
+Users can also inject additional DLC IDs in the config file.
+Config file is entirely optional. All fields within the config file are optional too.
+
 ## Installation
 
 * Setup the Koaloader
   1. Download the [latest release](https://github.com/acidicoala/Koaloader/releases/latest) of Koaloader archive
-  2. From this archive, unzip the file `winmm-64/winmm.dll` into the `Borderlands3\OakGame\Binaries\Win64` directory
+  2. From this archive, unzip the `winmm-64/winmm.dll` file into the `Borderlands3\OakGame\Binaries\Win64` directory
 * Setup the Unlocker
   1. Download the [latest release](https://github.com/acidicoala/BL3EGSUnlocker/releases/latest) archive of this unlocker
-  2. Unzip the archive contents into the `Borderlands3\OakGame\Binaries\Win64` directory
+  2. From this archive, unzip the `Unlocker.dll` file into the `Borderlands3\OakGame\Binaries\Win64` directory
 
 ## 👋 Acknowledgements
 

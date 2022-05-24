@@ -8,6 +8,8 @@
 #include <koalabox/patcher.hpp>
 #include <koalabox/win_util.hpp>
 
+#include <cpr/cpr.h>
+
 namespace unlocker {
 
     struct EntitlementsContainer {
@@ -16,9 +18,32 @@ namespace unlocker {
         uint32_t json_length;
     };
 
-    Config config;
+    Config config; // NOLINT(cert-err58-cpp)
+
+    auto make_entitlement(const String& id) {
+        return nlohmann::json{
+            {"id",                id},
+            {"entitlementName",   id},
+            {"namespace",         config.name_space},
+            {"catalogItemId",     id},
+            {"entitlementType",   "AUDIENCE"},
+            {"grantDate",         "2022-01-01T00:00:00.000Z"},
+            {"consumable",        false},
+            {"status",            "ACTIVE"},
+            {"useCount",          0},
+            {"entitlementSource", "eos"},
+        };
+    }
 
     void* parseEntitlements(void* RCX, void* RDX, EntitlementsContainer** R8, bool R9B) {
+        static const auto parseEntitlements_o = hook::get_original_function(true, nullptr, __func__, parseEntitlements);
+        logger->debug("{} -> R8: {}", __func__, fmt::ptr(R8));
+
+        if (not R8 or not*R8 or not(*R8)->entitlements_json) {
+            logger->warn("Incomplete R8 argument");
+            return parseEntitlements_o(RCX, RDX, R8, R9B);
+        }
+
         auto* container = *R8;
 
         const auto original_entitlements_json = container->entitlements_json;
@@ -30,26 +55,80 @@ namespace unlocker {
 
         auto json = nlohmann::json::parse(json_string, nullptr, true, true);
 
+        auto json_contains_entitlement_id = [&](const String& id) {
+            return std::ranges::any_of(json, [&](const auto& entitlement) {
+                const auto& catalogItemId = entitlement["catalogItemId"];
+                return util::strings_are_equal(catalogItemId, id);
+            });
+        };
+
         logger->debug("Original entitlement IDs:", json_string);
         for (const auto& entitlement: json) {
             logger->debug("  '{}'", entitlement["catalogItemId"]);
         }
 
-        for (const auto& id: config.entitlements) {
-            nlohmann::json entitlement = {
-                {"id",                id},
-                {"entitlementName",   id},
-                {"namespace",         config.name_space},
-                {"catalogItemId",     id},
-                {"entitlementType",   "AUDIENCE"},
-                {"grantDate",         "2022-01-01T00:00:00.000Z"},
-                {"consumable",        false},
-                {"status",            "ACTIVE"},
-                {"useCount",          0},
-                {"entitlementSource", "eos"},
+        if (config.auto_fetch_entitlements) {
+            nlohmann::json payload = {
+                {"query",     R"(query($namespace: String!) {
+                        Catalog {
+                            catalogOffers(
+                                namespace: $namespace
+                                params: {
+                                    count: 1000,
+                                }
+                            ) {
+                                elements {
+                                    items {
+                                        id,
+                                        title
+                                    }
+                                }
+                            }
+                        }
+                    })"
+                },
+                {"variables", {{"namespace", config.name_space}}}
             };
 
-            json.insert(json.end(), entitlement);
+            const auto res = cpr::Post(
+                cpr::Url{"https://graphql.epicgames.com/graphql"},
+                cpr::Header{{"content-type", "application/json"}},
+                cpr::Body{payload.dump()}
+            );
+
+            if (res.status_code == cpr::status::HTTP_OK) {
+                const auto res_json = nlohmann::json::parse(res.text);
+
+                // logger->debug("Web API entitlements response json:\n{}", res_json.dump(2));
+
+                const auto& elements = res_json["data"]["Catalog"]["catalogOffers"]["elements"];
+
+                for (const auto& element: elements) {
+                    for (const auto& items: element) {
+                        for (const auto& item: items) {
+                            const auto& id = item["id"];
+                            const auto& name = item["title"];
+
+                            // Skip entitlement injection if it is blacklisted or already present
+                            if (config.blacklist.contains(id) or json_contains_entitlement_id(id)) {
+                                continue;
+                            }
+
+                            logger->debug("Adding auto-fetched entitlement: '{}' — '{}'", id, name);
+                            json.insert(json.end(), make_entitlement(id));
+                        }
+                    }
+                }
+            } else {
+                logger->error(
+                    "Failed to automatically fetch entitlement ids. "
+                    "Status code: {}. Text: {}", res.status_code, res.text
+                );
+            }
+        }
+
+        for (const auto& id: config.entitlements) {
+            json.insert(json.end(), make_entitlement(id));
         }
 
         String entitlements_json = json.dump(2);
@@ -58,9 +137,8 @@ namespace unlocker {
         container->entitlements_json = entitlements_json.data();
         container->json_length = entitlements_json.size();
 
-        logger->debug("Injected entitlements:\n{}", container->entitlements_json);
+        logger->info("Injected entitlements:\n{}", container->entitlements_json);
 
-        static const auto parseEntitlements_o = hook::get_original_function(true, nullptr, __func__, parseEntitlements);
         const auto result = parseEntitlements_o(RCX, RDX, R8, R9B);
 
         // Restore original entitlements to avoid memory relocation crashes

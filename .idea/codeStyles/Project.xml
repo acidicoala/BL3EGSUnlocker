@@ -20,10 +20,11 @@
       </indentOptions>
     </codeStyleSettings>
     <codeStyleSettings language="ObjectiveC">
+      <option name="RIGHT_MARGIN" value="100" />
       <option name="BLANK_LINES_BEFORE_IMPORTS" value="0" />
       <option name="BLANK_LINES_AFTER_IMPORTS" value="0" />
       <option name="BLANK_LINES_AROUND_METHOD_IN_INTERFACE" value="0" />
-      <option name="SOFT_MARGINS" value="120" />
+      <option name="SOFT_MARGINS" value="100" />
       <indentOptions>
         <option name="CONTINUATION_INDENT_SIZE" value="4" />
       </indentOptions>
