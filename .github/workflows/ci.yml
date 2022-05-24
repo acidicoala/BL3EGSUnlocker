@@ -1,0 +1,19 @@
+name: Continuous Integration
+on: push
+
+jobs:
+  ci:
+    name: CI
+    uses: acidicoala/KoalaBox/.github/workflows/build-and-package.yml@9035588f1668acdfda8d24b7d0b054e49d4c8f29
+    permissions:
+      contents: write
+    with:
+      modules: >-
+        ["Unlocker"]
+
+      zip_command: >
+        zip -j $ZIP_NAME
+        artifacts/Unlocker-64/Unlocker.dll
+        res/BL3EGSUnlocker.jsonc
+
+      config: Release
