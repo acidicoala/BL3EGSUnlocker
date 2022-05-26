@@ -8,12 +8,12 @@ Users can use blacklist option in config to disable automatically fetched DLCs.
 Users can also inject additional DLC IDs in the config file.
 Config file is entirely optional. All fields within the config file are optional too.
 
-## Installation
+## 🛠️ Installation
 
-* Setup the Koaloader
+* Set up the Koaloader
   1. Download the [latest release](https://github.com/acidicoala/Koaloader/releases/latest) of Koaloader archive
   2. From this archive, unzip the `winmm-64/winmm.dll` file into the `Borderlands3\OakGame\Binaries\Win64` directory
-* Setup the Unlocker
+* Set up the Unlocker
   1. Download the [latest release](https://github.com/acidicoala/BL3EGSUnlocker/releases/latest) archive of this unlocker
   2. From this archive, unzip the `Unlocker.dll` file into the `Borderlands3\OakGame\Binaries\Win64` directory
 
@@ -21,6 +21,7 @@ Config file is entirely optional. All fields within the config file are optional
 
 This unlocker makes use of the following open source projects:
 
+- [C++ Requests](https://github.com/libcpr/cpr)
 - [JSON for Modern C++](https://github.com/nlohmann/json)
 - [PolyHook 2](https://github.com/stevemk14ebr/PolyHook_2_0)
 - [spdlog](https://github.com/gabime/spdlog)

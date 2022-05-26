@@ -8,7 +8,7 @@ namespace unlocker {
     using namespace koalabox;
 
     struct Config {
-        uint32_t $version = 1;
+        uint32_t $version = 2;
         bool logging = false;
         String entitlements_pattern = "4C 89 44 24 18 48 89 54 24 10 48 89 4C 24 08 55"
                                       "53 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 F8"

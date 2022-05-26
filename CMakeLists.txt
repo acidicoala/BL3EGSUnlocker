@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.22)
 
-project(BL3EGSUnlocker VERSION 1.1.0)
+project(BL3EGSUnlocker VERSION 1.1.1)
 
 include(KoalaBox/cmake/KoalaBox.cmake)
 
